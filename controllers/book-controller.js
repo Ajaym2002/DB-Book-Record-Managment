@@ -61,7 +61,7 @@ const books = await BookModel.find()
 
 //const availableBooks = (books - issuedBook);
 const availableBooks = books.map((each) =>{
-    if(each._id !== users.issuedBook._id){
+    if(each._id !== users.issuedBook){
        return res.status(200).json({ 
         success: true,
         data: availableBooks
@@ -73,16 +73,16 @@ const availableBooks = books.map((each) =>{
     })
 
 })
-// if(availableBooks === 0){
-//     return res.status(404).json({
-//         success: false,
-//         message: "No Avilable Books",
-//     })
-//     }
-//     return res.status(200).json({
-//         success: true,
-//         data: availableBooks,
-//     })
+if(availableBooks === 0){
+    return res.status(404).json({
+        success: false,
+        message: "No Avilable Books",
+    })
+    }
+    return res.status(200).json({
+        success: true,
+        data: availableBooks,
+    })
 
 }
 
@@ -91,15 +91,15 @@ exports.addNewBook = async(req, res) => {
     const {data} = req.body;
 
     if(!data){
-        return res.status(404).json({
+        return res.status(400).json({
             success: false,
-            message: "Book Details Are Not Provided"
+            message: "No data provided to add a book"
         })
     }
     await BookModel.create(data);
-    const allBooks = await BookModel.find()
+    const allBooks = await BookModel.find();
 
-    return res.status.json({
+    return res.status(200).json({
         success: true,
         data: allBooks,
     })
